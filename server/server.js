@@ -16,9 +16,31 @@ app.set('trust proxy', true);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// CORS: allow origin from CLIENT_URL env (set this in Vercel/Render), default allow all for dev
-const CLIENT_URL = process.env.CLIENT_URL || '*';
-app.use(cors({ origin: CLIENT_URL, optionsSuccessStatus: 200 }));
+// CORS: support multiple allowed origins from CLIENT_URL env (comma-separated)
+// and include common local origins. This function allows precise control in production.
+const rawClientUrls = process.env.CLIENT_URL || '';
+const extraAllowed = ['https://supportdesk-tgio.onrender.com']; // include the Render backend URL as requested
+let allowedOrigins = rawClientUrls.split(',').map(s => s.trim()).filter(Boolean).concat(extraAllowed);
+
+// Always allow common local dev origins when not in production
+if (process.env.NODE_ENV !== 'production') {
+  allowedOrigins = allowedOrigins.concat(['http://localhost:3000', 'http://localhost:5173']);
+}
+
+// Deduplicate
+allowedOrigins = Array.from(new Set(allowedOrigins));
+
+app.use(cors({
+  origin: function(origin, callback) {
+    // allow requests with no origin (curl, server-to-server)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      return callback(null, true);
+    }
+    return callback(new Error('CORS policy: origin not allowed'), false);
+  },
+  optionsSuccessStatus: 200,
+}));
 
 // Routes
 app.use('/api/auth', require('./routes/authRoutes'));
