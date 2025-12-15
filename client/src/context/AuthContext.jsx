@@ -92,7 +92,6 @@ export const AuthProvider = ({ children }) => {
     try {
       setLoading(true);
       const token = localStorage.getItem('token');
-      const token = localStorage.getItem('token');
       const response = await apiClient.put('/auth/profile', profileData, {
         headers: { Authorization: `Bearer ${token}` },
       });
