@@ -23,6 +23,7 @@ const rawClientUrls = process.env.CLIENT_URL || '';
 const extraAllowed = [
   'https://supportdesk-tgio.onrender.com',
   'https://support-desk-green.vercel.app',
+  'https://support-desk-610j9gz2q-pratimas-projects-1fc231e9.vercel.app',
 ];
 let allowedOrigins = rawClientUrls.split(',').map(s => s.trim()).filter(Boolean).concat(extraAllowed);
 
