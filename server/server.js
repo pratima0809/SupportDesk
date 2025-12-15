@@ -73,10 +73,15 @@ const server = app.listen(PORT, () => {
 const graceful = () => {
   console.info('Shutting down gracefully...');
   server.close(() => {
-    mongoose.connection.close(false, () => {
-      console.info('Mongo connection closed. Exiting process.');
-      process.exit(0);
-    });
+    mongoose.connection.close(false)
+      .then(() => {
+        console.info('Mongo connection closed. Exiting process.');
+        process.exit(0);
+      })
+      .catch((err) => {
+        console.error('Error closing Mongo connection:', err);
+        process.exit(1);
+      });
   });
 };
 
