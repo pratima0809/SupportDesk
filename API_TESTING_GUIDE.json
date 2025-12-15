@@ -1,0 +1,294 @@
+{
+  "client_info": "Postman Collection for Support Desk API",
+  "version": "1.0",
+  "endpoints": {
+    "auth": {
+      "register": {
+        "method": "POST",
+        "url": "http://localhost:5000/api/auth/register",
+        "body": {
+          "name": "John Doe",
+          "email": "john@example.com",
+          "password": "password123"
+        },
+        "description": "Register a new user"
+      },
+      "login": {
+        "method": "POST",
+        "url": "http://localhost:5000/api/auth/login",
+        "body": {
+          "email": "john@example.com",
+          "password": "password123"
+        },
+        "description": "Login and get JWT token",
+        "response_includes": "token, user object"
+      },
+      "getCurrentUser": {
+        "method": "GET",
+        "url": "http://localhost:5000/api/auth/me",
+        "headers": {
+          "Authorization": "Bearer {token}"
+        },
+        "description": "Get current user profile"
+      },
+      "updateProfile": {
+        "method": "PUT",
+        "url": "http://localhost:5000/api/auth/profile",
+        "headers": {
+          "Authorization": "Bearer {token}"
+        },
+        "body": {
+          "name": "Jane Doe",
+          "phone": "1234567890",
+          "department": "Engineering"
+        },
+        "description": "Update user profile"
+      }
+    },
+    "tickets": {
+      "createTicket": {
+        "method": "POST",
+        "url": "http://localhost:5000/api/tickets/create",
+        "headers": {
+          "Authorization": "Bearer {token}"
+        },
+        "body": {
+          "title": "Cannot login to system",
+          "description": "I am unable to login with my credentials",
+          "category": "Account",
+          "priority": "High"
+        },
+        "description": "Create a new support ticket"
+      },
+      "getUserTickets": {
+        "method": "GET",
+        "url": "http://localhost:5000/api/tickets/my-tickets",
+        "headers": {
+          "Authorization": "Bearer {token}"
+        },
+        "description": "Get all tickets created by the user"
+      },
+      "getAllTickets": {
+        "method": "GET",
+        "url": "http://localhost:5000/api/tickets?status=Open&priority=High&category=Technical",
+        "headers": {
+          "Authorization": "Bearer {admin_token}"
+        },
+        "description": "Get all tickets (admin only) with optional filters",
+        "query_params": {
+          "status": "Open, In Progress, Resolved, Closed",
+          "priority": "Low, Medium, High",
+          "category": "Technical, Network, Account, Academic, Other"
+        }
+      },
+      "getTicketById": {
+        "method": "GET",
+        "url": "http://localhost:5000/api/tickets/{ticket_id}",
+        "headers": {
+          "Authorization": "Bearer {token}"
+        },
+        "description": "Get details of a specific ticket"
+      },
+      "updateTicket": {
+        "method": "PUT",
+        "url": "http://localhost:5000/api/tickets/{ticket_id}",
+        "headers": {
+          "Authorization": "Bearer {token}"
+        },
+        "body": {
+          "status": "In Progress",
+          "priority": "Medium",
+          "assignedTo": "{admin_user_id}",
+          "resolution": "Issue is being investigated"
+        },
+        "description": "Update ticket (admin can update any ticket)"
+      },
+      "deleteTicket": {
+        "method": "DELETE",
+        "url": "http://localhost:5000/api/tickets/{ticket_id}",
+        "headers": {
+          "Authorization": "Bearer {token}"
+        },
+        "description": "Delete a ticket (only owner or admin)"
+      },
+      "getDashboardStats": {
+        "method": "GET",
+        "url": "http://localhost:5000/api/tickets/dashboard/stats",
+        "headers": {
+          "Authorization": "Bearer {admin_token}"
+        },
+        "description": "Get dashboard statistics (admin only)",
+        "returns": {
+          "totalTickets": "number",
+          "openTickets": "number",
+          "inProgressTickets": "number",
+          "resolvedTickets": "number",
+          "ticketsByCategory": "array",
+          "ticketsByPriority": "array"
+        }
+      }
+    },
+    "comments": {
+      "createComment": {
+        "method": "POST",
+        "url": "http://localhost:5000/api/comments/create",
+        "headers": {
+          "Authorization": "Bearer {token}"
+        },
+        "body": {
+          "ticketId": "{ticket_id}",
+          "text": "We are investigating this issue. Please check back later for updates."
+        },
+        "description": "Add a comment to a ticket"
+      },
+      "getComments": {
+        "method": "GET",
+        "url": "http://localhost:5000/api/comments/{ticket_id}",
+        "headers": {
+          "Authorization": "Bearer {token}"
+        },
+        "description": "Get all comments for a ticket"
+      },
+      "updateComment": {
+        "method": "PUT",
+        "url": "http://localhost:5000/api/comments/{comment_id}",
+        "headers": {
+          "Authorization": "Bearer {token}"
+        },
+        "body": {
+          "text": "Updated comment text"
+        },
+        "description": "Update your own comment"
+      },
+      "deleteComment": {
+        "method": "DELETE",
+        "url": "http://localhost:5000/api/comments/{comment_id}",
+        "headers": {
+          "Authorization": "Bearer {token}"
+        },
+        "description": "Delete a comment (owner or admin only)"
+      }
+    }
+  },
+  "testing_workflow": [
+    {
+      "step": 1,
+      "action": "Register User",
+      "endpoint": "POST /api/auth/register",
+      "save": "Use returned token for next requests"
+    },
+    {
+      "step": 2,
+      "action": "Login (Alternative)",
+      "endpoint": "POST /api/auth/login",
+      "save": "Receive JWT token"
+    },
+    {
+      "step": 3,
+      "action": "Create Ticket",
+      "endpoint": "POST /api/tickets/create",
+      "required_token": true,
+      "save": "Save ticket_id for next requests"
+    },
+    {
+      "step": 4,
+      "action": "Get Your Tickets",
+      "endpoint": "GET /api/tickets/my-tickets",
+      "required_token": true
+    },
+    {
+      "step": 5,
+      "action": "View Ticket Details",
+      "endpoint": "GET /api/tickets/{ticket_id}",
+      "required_token": true
+    },
+    {
+      "step": 6,
+      "action": "Add Comment",
+      "endpoint": "POST /api/comments/create",
+      "required_token": true
+    },
+    {
+      "step": 7,
+      "action": "Get Comments",
+      "endpoint": "GET /api/comments/{ticket_id}",
+      "required_token": true
+    },
+    {
+      "step": 8,
+      "action": "Admin: Get All Tickets",
+      "endpoint": "GET /api/tickets",
+      "required_admin": true
+    },
+    {
+      "step": 9,
+      "action": "Admin: Update Ticket",
+      "endpoint": "PUT /api/tickets/{ticket_id}",
+      "required_admin": true
+    },
+    {
+      "step": 10,
+      "action": "Admin: View Dashboard Stats",
+      "endpoint": "GET /api/tickets/dashboard/stats",
+      "required_admin": true
+    }
+  ],
+  "error_responses": {
+    "401": {
+      "message": "Not authorized to access this route",
+      "cause": "Missing or invalid JWT token"
+    },
+    "403": {
+      "message": "Not authorized to perform this action",
+      "cause": "Insufficient permissions (e.g., not admin)"
+    },
+    "404": {
+      "message": "Resource not found",
+      "cause": "Ticket or comment does not exist"
+    },
+    "400": {
+      "message": "Bad request",
+      "cause": "Missing required fields or invalid data"
+    },
+    "500": {
+      "message": "Internal server error",
+      "cause": "Server error - check backend logs"
+    }
+  },
+  "test_data": {
+    "test_user": {
+      "name": "Test User",
+      "email": "test@example.com",
+      "password": "testpass123"
+    },
+    "test_admin": {
+      "name": "Admin User",
+      "email": "admin@example.com",
+      "password": "adminpass123"
+    },
+    "sample_ticket": {
+      "title": "Sample Issue Title",
+      "description": "This is a sample issue description",
+      "category": "Technical",
+      "priority": "High"
+    },
+    "categories": [
+      "Technical",
+      "Network",
+      "Account",
+      "Academic",
+      "Other"
+    ],
+    "priorities": [
+      "Low",
+      "Medium",
+      "High"
+    ],
+    "statuses": [
+      "Open",
+      "In Progress",
+      "Resolved",
+      "Closed"
+    ]
+  }
+}
