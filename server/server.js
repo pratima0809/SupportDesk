@@ -19,7 +19,11 @@ app.use(express.urlencoded({ extended: true }));
 // CORS: support multiple allowed origins from CLIENT_URL env (comma-separated)
 // and include common local origins. This function allows precise control in production.
 const rawClientUrls = process.env.CLIENT_URL || '';
-const extraAllowed = ['https://supportdesk-tgio.onrender.com']; // include the Render backend URL as requested
+// include the Render backend URL and the Vercel frontend URL (so preflight from the frontend is allowed)
+const extraAllowed = [
+  'https://supportdesk-tgio.onrender.com',
+  'https://support-desk-green.vercel.app',
+];
 let allowedOrigins = rawClientUrls.split(',').map(s => s.trim()).filter(Boolean).concat(extraAllowed);
 
 // Always allow common local dev origins when not in production
@@ -30,13 +34,25 @@ if (process.env.NODE_ENV !== 'production') {
 // Deduplicate
 allowedOrigins = Array.from(new Set(allowedOrigins));
 
+// Log allowed origins at startup (helps debugging)
+console.info('Allowed CORS origins:', allowedOrigins);
+
+app.use((req, res, next) => {
+  // For debug: attach origin to req
+  req.requestOrigin = req.headers.origin;
+  return next();
+});
+
 app.use(cors({
   origin: function(origin, callback) {
-    // allow requests with no origin (curl, server-to-server)
+    // allow requests with no origin (server-to-server, curl)
     if (!origin) return callback(null, true);
+    // if origin is allowed, accept it
     if (allowedOrigins.indexOf(origin) !== -1) {
       return callback(null, true);
     }
+    // origin not allowed — return an explicit error object so CORS will not set header
+    // but respond gracefully with 403 for preflight OPTIONS to include no CORS header
     return callback(new Error('CORS policy: origin not allowed'), false);
   },
   optionsSuccessStatus: 200,
