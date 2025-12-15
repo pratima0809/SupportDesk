@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const API_BASE_URL = '/api';
+// Use REACT_APP_API_URL when set (production on Vercel), otherwise default to relative '/api' for local dev
+const API_BASE_URL = process.env.REACT_APP_API_URL ? process.env.REACT_APP_API_URL.replace(/\/$/, '') + '/api' : '/api';
 
 const getHeaders = () => {
   const token = localStorage.getItem('token');

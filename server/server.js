@@ -1,17 +1,24 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const mongoose = require('mongoose');
 const connectDB = require('./config/db');
 
-// Connect to MongoDB
+// Connect to MongoDB (uses process.env.MONGODB_URI)
 connectDB();
 
 const app = express();
 
+// Trust proxy (needed on many PaaS like Render)
+app.set('trust proxy', true);
+
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
+
+// CORS: allow origin from CLIENT_URL env (set this in Vercel/Render), default allow all for dev
+const CLIENT_URL = process.env.CLIENT_URL || '*';
+app.use(cors({ origin: CLIENT_URL, optionsSuccessStatus: 200 }));
 
 // Routes
 app.use('/api/auth', require('./routes/authRoutes'));
@@ -36,6 +43,20 @@ app.use((err, req, res, next) => {
 });
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
+// Graceful shutdown
+const graceful = () => {
+  console.info('Shutting down gracefully...');
+  server.close(() => {
+    mongoose.connection.close(false, () => {
+      console.info('Mongo connection closed. Exiting process.');
+      process.exit(0);
+    });
+  });
+};
+
+process.on('SIGTERM', graceful);
+process.on('SIGINT', graceful);

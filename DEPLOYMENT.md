@@ -72,6 +72,8 @@ This guide covers deploying your Support Desk application to production using po
    - Build: `npm install`
    - Start: `npm start`
 
+   > Note: When deploying to Render, set `CLIENT_URL` to your Vercel frontend URL (e.g. `https://your-app.vercel.app`) so the backend only allows requests from your frontend.
+
 5. **Set environment variables**
 
 6. **Deploy**
@@ -100,6 +102,8 @@ This guide covers deploying your Support Desk application to production using po
    ```
    REACT_APP_API_URL=https://your-backend-url.com
    ```
+
+  - On Vercel: set `REACT_APP_API_URL` to your backend URL (e.g. `https://your-backend.onrender.com`) in the Vercel project settings under Environment Variables.
 
 4. **Redeploy:**
    ```bash
@@ -198,12 +202,23 @@ PORT=5000
 NODE_ENV=production
 ```
 
+Add these for Render (in Render dashboard environment variables):
+
+```
+MONGODB_URI=...        # MongoDB Atlas connection string
+JWT_SECRET=...         # strong secret
+NODE_ENV=production
+CLIENT_URL=https://your-frontend.vercel.app
+```
+
 ### Frontend Production Variables
 
 In `client/.env.production.local`:
 ```env
 REACT_APP_API_URL=https://your-backend-domain.com
 ```
+
+On Vercel set the same `REACT_APP_API_URL` env variable (Vercel exposes these at build time). Also set `NODE_ENV=production` on Vercel if needed.
 
 ---
 
