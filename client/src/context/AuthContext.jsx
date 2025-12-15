@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import axios from 'axios';
+import apiClient from '../utils/apiClient';
 
 const AuthContext = createContext();
 
@@ -23,9 +23,7 @@ export const AuthProvider = ({ children }) => {
   const fetchCurrentUser = async (token) => {
     try {
       setLoading(true);
-      const response = await axios.get('/api/auth/me', {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await apiClient.get('/auth/me', { headers: { Authorization: `Bearer ${token}` } });
       setUser(response.data.user);
       setIsAuthenticated(true);
       setError(null);
@@ -41,7 +39,7 @@ export const AuthProvider = ({ children }) => {
   const register = async (name, email, password) => {
     try {
       setLoading(true);
-      const response = await axios.post('/api/auth/register', {
+      const response = await apiClient.post('/auth/register', {
         name,
         email,
         password,
@@ -64,7 +62,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     try {
       setLoading(true);
-      const response = await axios.post('/api/auth/login', {
+      const response = await apiClient.post('/auth/login', {
         email,
         password,
       });
@@ -94,7 +92,8 @@ export const AuthProvider = ({ children }) => {
     try {
       setLoading(true);
       const token = localStorage.getItem('token');
-      const response = await axios.put('/api/auth/profile', profileData, {
+      const token = localStorage.getItem('token');
+      const response = await apiClient.put('/auth/profile', profileData, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setUser(response.data.user);
