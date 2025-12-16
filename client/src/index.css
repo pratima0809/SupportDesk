@@ -162,35 +162,70 @@ code {
 
 /* Modern Login Page Styles */
 .auth-page {
+  position: relative;
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #eef2ff 0%, #fef3c7 100%);
   padding: 40px 16px;
+  overflow: hidden;
+  background: #0b1220;
+}
+.auth-page::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(9, 12, 26, 0.75), rgba(30, 64, 175, 0.55));
+  z-index: 1;
+}
+.auth-bg-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
 }
 .auth-container {
+  position: relative;
+  z-index: 2;
   width: 100%;
   max-width: 1100px;
   display: flex;
   align-items: stretch;
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(2,6,23,0.08);
-  background: #ffffff;
+  box-shadow: 0 10px 30px rgba(2,6,23,0.18);
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(6px);
 }
 .auth-visual {
+  position: relative;
   flex: 1.1;
-  background: linear-gradient(180deg, rgba(59,130,246,0.08), rgba(99,102,241,0.04));
   padding: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
+  background: linear-gradient(145deg, rgba(255,255,255,0.18), rgba(255,255,255,0.06));
+  border-right: 1px solid rgba(255,255,255,0.25);
+  box-shadow: inset 0 1px 1px rgba(255,255,255,0.35);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
-.auth-visual-inner { max-width: 420px; }
-.auth-visual-title { font-size:28px; margin-bottom:8px; color:#0f172a; font-weight:800; }
-.auth-visual-sub { color:#475569; }
-.auth-card { flex:0.9; padding:36px; }
+.auth-visual::before {
+  content: "";
+  position: absolute;
+  inset: 12px;
+  border-radius: 18px;
+  background: radial-gradient(circle at 20% 20%, rgba(255,255,255,0.18), transparent 45%),
+              radial-gradient(circle at 80% 0%, rgba(255,255,255,0.14), transparent 38%);
+  opacity: 0.9;
+  pointer-events: none;
+}
+.auth-visual-inner { max-width: 420px; position: relative; z-index: 1; }
+.auth-visual-title { font-size:28px; margin-bottom:8px; color:#f8fafc; font-weight:800; letter-spacing:0.2px; }
+.auth-visual-sub { color: rgba(255,255,255,0.9); }
+.auth-card { flex:0.9; padding:36px; background: rgba(255,255,255,0.94); }
 .auth-card-header .brand-title { font-size:20px; margin-bottom:6px; }
 .auth-form { display:flex; flex-direction:column; gap:10px; }
 .form-row-between { display:flex; justify-content:space-between; align-items:center; }

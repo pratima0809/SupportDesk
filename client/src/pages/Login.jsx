@@ -26,10 +26,14 @@ export default function Login() {
 
   return (
     <div className="auth-page">
+      <video className="auth-bg-video" autoPlay loop muted playsInline>
+        <source src="https://cdn.pixabay.com/video/2023/10/10/184489-873483996_large.mp4" type="video/mp4" />
+      </video>
+
       <div className="auth-container">
         <aside className="auth-visual">
           <div className="auth-visual-inner">
-            <h1 className="auth-visual-title">Support Desk</h1>
+            <h1 className="auth-visual-title">SupportDesk</h1>
             <p className="auth-visual-sub">Ticketing made simple — collaborate, track, resolve.</p>
           </div>
         </aside>
