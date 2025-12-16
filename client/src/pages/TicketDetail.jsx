@@ -158,7 +158,7 @@ export default function TicketDetail() {
 
             <div style={{ marginTop: 16, marginBottom: 20 }}>
               <p className="small text-muted" style={{ marginBottom: 8 }}>Description</p>
-              <div style={{ lineHeight: 1.5, color: '#111827' }}>{ticket.description}</div>
+              <div style={{ lineHeight: 1.5 }} className="ticket-description">{ticket.description}</div>
             </div>
 
             <div style={{ marginTop: 8 }}>

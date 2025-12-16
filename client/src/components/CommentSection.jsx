@@ -78,12 +78,12 @@ export default function CommentSection({ ticketId }) {
                   <p className="time">{new Date(comment.createdAt).toLocaleString()}</p>
                 </div>
                 {comment.userId._id === user?.id && (
-                  <button onClick={() => handleDeleteComment(comment._id)} style={{ background: 'transparent', border: 'none', color: '#dc2626', cursor: 'pointer' }}>
+                  <button onClick={() => handleDeleteComment(comment._id)} className="btn-ghost" style={{ background: 'transparent', border: 'none', color: '#dc2626', cursor: 'pointer', padding: '4px 8px' }}>
                     Delete
                   </button>
                 )}
               </div>
-              <p style={{ marginTop: 8, color: '#111827' }}>{comment.text}</p>
+              <p style={{ marginTop: 8 }}>{comment.text}</p>
             </div>
           ))
         )}
