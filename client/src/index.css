@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&display=swap');
+
 /* Global reset */
 * {
   margin: 0;
@@ -223,7 +225,7 @@ code {
   pointer-events: none;
 }
 .auth-visual-inner { max-width: 420px; position: relative; z-index: 1; }
-.auth-visual-title { font-size:28px; margin-bottom:8px; color:#f8fafc; font-weight:800; letter-spacing:0.2px; }
+.auth-visual-title { font-size:28px; margin-bottom:8px; color:#f8fafc; font-weight:800; letter-spacing:0.2px; font-family: 'DM Serif Display', serif; }
 .auth-visual-sub { color: rgba(255,255,255,0.9); }
 .auth-card { flex:0.9; padding:36px; background: rgba(255,255,255,0.94); }
 .auth-card-header .brand-title { font-size:20px; margin-bottom:6px; }
